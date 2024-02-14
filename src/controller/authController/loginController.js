@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../../model/userModel");
+const { generateToken } = require("../../config/jwtToken");
 
 const loginUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
@@ -31,6 +32,7 @@ const loginUser = asyncHandler(async (req, res) => {
       role: finduser.role,
       email: finduser.email,
       isBlocked: finduser.isBlocked,
+      token: generateToken(finduser._id),
     };
     res.json(responseData);
   } catch (error) {

@@ -16,20 +16,26 @@ var userSchema = new mongoose.Schema(
       max: 999999,
     },
     passwordChangeAt: Date,
-    passwordResetToken: String,
-    passwordResetExpires: Date,
     otpExpire: Date,
-    changePassword: { type: Boolean, default: false },
+    changePassword: { type: Boolean, default: true },
+    updatedBy: { type: String }, // Change this line to store the username
   },
   { timestamps: true }
 );
 
+//encrypt the password
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
   }
   const salt = await bcrypt.genSaltSync(10);
   this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+// Create a middleware to update the updatedBy field before saving the document
+userSchema.pre("updateOne", function (next) {
+  this.set({ updatedBy: this.getQuery().username });
   next();
 });
 
@@ -59,8 +65,6 @@ userSchema.methods.createOtp = function () {
 
 //password match
 userSchema.methods.isPasswordMatch = async function (enterPassword) {
-  console.log(this.password, "test password");
-  console.log(enterPassword, "Enter password");
   return await bcrypt.compare(enterPassword, this.password);
 };
 
