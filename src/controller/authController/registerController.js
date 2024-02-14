@@ -1,15 +1,23 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../../model/userModel");
 const sendEmail = require("../emailController");
+const RegisterDTO = require("../../dto/registerDTO");
 
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
   const { email, username } = req.body;
 
+  // Ensure email and username are strings
+  if (typeof email !== "string" || typeof username !== "string") {
+    return res.status(400).json({ error: "Invalid email or username format" });
+  }
+
+  const registerDTO = new RegisterDTO(email, username);
+
   try {
     // Check if the user or username already exists
-    const findUser = await User.findOne({ email });
-    const findUsername = await User.findOne({ username });
+    const findUser = await User.findOne({ email: registerDTO.email });
+    const findUsername = await User.findOne({ username: registerDTO.username });
 
     if (findUser) {
       return res.status(400).json({ error: "User already exists" });
