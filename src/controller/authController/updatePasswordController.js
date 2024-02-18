@@ -2,24 +2,21 @@ const asyncHandler = require("express-async-handler");
 const User = require("../../model/userModel");
 const validateMongoDBID = require("../../utils/validateMongoDBID");
 const comparePasswords = require("../../utils/compareUserPassword");
+const UpdatePasswordDTO = require("../../dto/updatePasswordDTO");
 
 const updatePassword = asyncHandler(async (req, res) => {
   const { id } = req.user;
   const { oldPassword, newPassword } = req.body;
+
+  const updatePasswordDTO = new UpdatePasswordDTO(id, oldPassword, newPassword);
   try {
-    if (!oldPassword || !newPassword) {
-      throw new Error("Both oldPassword and newPassword are required");
-    }
-
-    validateMongoDBID(id); //validate id 
-
-    const findUser = await User.findById(id);
+    const findUser = await User.findById(updatePasswordDTO.id);
     const isPasswordValid = await comparePasswords(
-      oldPassword,
+      updatePasswordDTO.oldPassword,
       findUser.password
     );
     if (!isPasswordValid) {
-      throw new Error("Invalid old password");
+      throw new Error("Invalid  password");
     }
     // Change new password with old one
     findUser.password = newPassword;

@@ -1,5 +1,7 @@
-class LoginDTO {
-  constructor(
+const { generateToken } = require("../../config/jwtToken");
+
+class LoginResDTO {
+  constructor({
     id,
     username,
     fullname,
@@ -7,8 +9,7 @@ class LoginDTO {
     role,
     email,
     isBlocked,
-    token
-  ) {
+  }) {
     this.id = id;
     this.username = username;
     this.fullname = fullname;
@@ -16,7 +17,7 @@ class LoginDTO {
     this.role = role;
     this.email = email;
     this.isBlocked = isBlocked;
-    this.token = token;
+    this.token = generateToken(id);
   }
 }
-module.exports = LoginDTO;
+module.exports = LoginResDTO;

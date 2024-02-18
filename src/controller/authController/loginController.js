@@ -1,40 +1,26 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../../model/userModel");
-const { generateToken } = require("../../config/jwtToken");
+const LoginDTO = require("../../dto/reqDTO/LoginDTO");
+const LoginResDTO = require("../../dto/resDTO/LoginReqDTO");
 
 const loginUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
+  const loginReq = new LoginDTO(username, password);
 
   try {
-    if (!username || !password) {
-      return res
-        .status(400)
-        .json({ error: "Username and password are required" });
-    }
-
-    const finduser = await User.findOne({ username: username });
+    const finduser = await User.findOne({ username: loginReq.username });
 
     if (!finduser) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const isPasswordMatch = await finduser?.isPasswordMatch(password);
+    const isPasswordMatch = await finduser?.isPasswordMatch(loginReq.password);
 
     if (!isPasswordMatch) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-
-    const responseData = {
-      id: finduser.id,
-      username: finduser.username,
-      fullName: finduser.fullname,
-      changePassword: finduser.changePassword,
-      role: finduser.role,
-      email: finduser.email,
-      isBlocked: finduser.isBlocked,
-      token: generateToken(finduser._id),
-    };
-    res.json(responseData);
+    const loginRes = new LoginResDTO(finduser);
+    res.json(loginRes);
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Internal Server Error" });
