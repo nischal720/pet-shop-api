@@ -1,6 +1,7 @@
 const PetImageModel = require("../../model/petImageModal");
 const PetDetailsModal = require("../../model/petDetail");
 const asyncHandler = require("express-async-handler");
+const PetDetilsDTO = require("../../dto/resDTO/PetResDTO");
 
 const getImage = asyncHandler(async (req, res) => {
   const name = req.params?.name;
@@ -21,8 +22,22 @@ const getImage = asyncHandler(async (req, res) => {
 
 const getPetDetails = asyncHandler(async (req, res) => {
   try {
-    const allPetDetails = await PetDetailsModal.find({});
-    res.json(allPetDetails);
+    const allPetDetails = await PetDetailsModal.find({}).populate("image");
+    const petDetailsDTOArray = allPetDetails.map(
+      (petDetail) =>
+        new PetDetilsDTO(
+          petDetail.id,
+          petDetail.code,
+          petDetail.breed,
+          petDetail.category,
+          petDetail.price,
+          petDetail.age,
+          petDetail.description,
+          petDetail.vaccinated,
+          petDetail.image?.name
+        )
+    );
+    res.json(petDetailsDTOArray);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
