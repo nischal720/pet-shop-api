@@ -10,7 +10,12 @@ const {
 const {
   createPetDetails,
 } = require("../controller/petDetailController/createPetDetail");
-const { updatePetDetails } = require("../controller/petDetailController/updatePetDetails");
+const {
+  updatePetDetails,
+} = require("../controller/petDetailController/updatePetDetails");
+const {
+  deletePetDetails,
+} = require("../controller/petDetailController/deletePetDetails");
 
 const router = express.Router();
 
@@ -19,5 +24,6 @@ router.post("/login", loginUser);
 router.put("/update/password", authMiddleWare, updatePassword);
 router.post("/pet-details", authMiddleWare, isAdmin, createPetDetails);
 router.put("/pet-details/:id", authMiddleWare, isAdmin, updatePetDetails);
+router.delete("/pet-details", authMiddleWare, isAdmin, deletePetDetails);
 
 module.exports = router;
