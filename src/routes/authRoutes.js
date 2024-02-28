@@ -10,6 +10,7 @@ const {
 const {
   createPetDetails,
 } = require("../controller/petDetailController/createPetDetail");
+const { updatePetDetails } = require("../controller/petDetailController/updatePetDetails");
 
 const router = express.Router();
 
@@ -17,5 +18,6 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.put("/update/password", authMiddleWare, updatePassword);
 router.post("/pet-details", authMiddleWare, isAdmin, createPetDetails);
+router.put("/pet-details/:id", authMiddleWare, isAdmin, updatePetDetails);
 
 module.exports = router;
