@@ -1,4 +1,5 @@
 const { generateToken } = require("../../config/jwtToken");
+const { generateRefreshToken } = require("../../config/refreshToken");
 
 class LoginResDTO {
   constructor({
@@ -18,6 +19,7 @@ class LoginResDTO {
     this.email = email;
     this.isBlocked = isBlocked;
     this.token = generateToken(id);
+    this.refreshToken = generateRefreshToken(id);
   }
 }
 module.exports = LoginResDTO;

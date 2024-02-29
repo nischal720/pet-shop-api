@@ -6,9 +6,15 @@ const authMiddleWare = asyncHandler(async (req, res, next) => {
   let token;
   if (req?.headers?.authorization?.startsWith("Bearer")) {
     token = req.headers?.authorization?.split(" ")[1];
+
     try {
       if (token) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const now = new Date();
+        // Check token expiration
+        if (decoded.exp < now.getTime() / 1000) {
+          throw new Error("Token has expired");
+        }
         const user = await User.findById(decoded?.id);
         req.user = user;
         next();

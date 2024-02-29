@@ -16,6 +16,7 @@ const {
 const {
   deletePetDetails,
 } = require("../controller/petDetailController/deletePetDetails");
+const { refreshToken } = require("../controller/authController/refreshToken");
 
 const router = express.Router();
 
@@ -25,5 +26,6 @@ router.put("/update/password", authMiddleWare, updatePassword);
 router.post("/pet-details", authMiddleWare, isAdmin, createPetDetails);
 router.put("/pet-details/:id", authMiddleWare, isAdmin, updatePetDetails);
 router.delete("/pet-details", authMiddleWare, isAdmin, deletePetDetails);
+router.post("/refresh-token", refreshToken);
 
 module.exports = router;
