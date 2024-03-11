@@ -27,7 +27,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     // Create a new user instance
-    const newUser = new User(req.body);
+    const newUser = new User({email:registerDTO.email,username:registerDTO.username,fullname:registerDTO.fullName});
 
     // Generate a random password
     const password = await newUser.createRandomPassword();
