@@ -5,16 +5,15 @@ const RegisterDTO = require("../../dto/registerDTO");
 
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, username,fullname } = req.body;
+  const { email, username, fullname } = req.body;
 
   // Ensure email and username are strings
   if (typeof email !== "string" || typeof username !== "string") {
     return res.status(400).json({ error: "Invalid email or username format" });
   }
 
-  const registerDTO = new RegisterDTO(email, username,fullname);
-
   try {
+    const registerDTO = new RegisterDTO(email, username, fullname);
     // Check if the user or username already exists
     const findUser = await User.findOne({ email: registerDTO.email });
     const findUsername = await User.findOne({ username: registerDTO.username });
@@ -50,8 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     res.json("Registration Successful. Check your email for the password.");
   } catch (error) {
-    console.error("Registration error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    throw new Error(error);
   }
 });
 

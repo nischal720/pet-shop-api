@@ -17,8 +17,10 @@ class RegisterDTO {
   }
 
   validateFullName(fullName) {
-    if (!fullName) {
-      throw new Error("Field Fullname is required");
+    const names = fullName?.split(' ');
+    // Check if at least a first name and a last name are present
+    if (names.length < 2 || !names[0] || !names[names.length - 1]) {
+      throw new Error("Fullname must include both a first name and a last name");
     }
   }
   validateUsername(username) {
