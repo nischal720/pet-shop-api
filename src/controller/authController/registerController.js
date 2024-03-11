@@ -5,14 +5,14 @@ const RegisterDTO = require("../../dto/registerDTO");
 
 // Register User
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, username } = req.body;
+  const { email, username,fullname } = req.body;
 
   // Ensure email and username are strings
   if (typeof email !== "string" || typeof username !== "string") {
     return res.status(400).json({ error: "Invalid email or username format" });
   }
 
-  const registerDTO = new RegisterDTO(email, username);
+  const registerDTO = new RegisterDTO(email, username,fullname);
 
   try {
     // Check if the user or username already exists
