@@ -17,7 +17,7 @@ var userSchema = new mongoose.Schema(
     },
     passwordChangeAt: Date,
     otpExpire: Date,
-    changePassword: { type: Boolean, default: true },
+    changePassword: { type: Boolean, default: false },
     updatedBy: { type: String }, // Change this line to store the username
   },
   { timestamps: true }

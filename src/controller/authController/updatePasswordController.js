@@ -20,7 +20,7 @@ const updatePassword = asyncHandler(async (req, res) => {
     }
     // Change new password with old one
     findUser.password = newPassword;
-    findUser.changePassword = false;
+    findUser.changePassword = true;
     //Save the user to database
     await findUser.save();
     // Send Response
